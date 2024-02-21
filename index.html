@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="wasm_exec.js"></script>
+    <script>
+
+        const go = new Go();
+
+        WebAssembly.instantiateStreaming(fetch("repl.wasm"), go.importObject).then((result) => {
+
+            go.run(result.instance);
+
+        });
+
+    </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Editor</title>
+    <style type="text/css" media="screen">
+        body {
+            overflow: auto;
+            background-color: #1e133a;
+        }
+
+        #container {
+            display: flex;
+            justify-content: flex-end;
+            overflow: auto;
+        }
+
+        #editor {
+            margin: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 50%;
+        }
+
+        #output-container {
+            width: 50%;
+            white-space: pre-wrap;
+            color: grey;
+            font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace;
+            overflow: auto;
+
+        }
+        #output {
+            padding-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <pre id="editor">
+let map = fn(arr, func) {
+    let iter = fn(arr, acc) {
+        if (len(arr) == 0) {
+            return acc;
+        } else {
+            iter(rest(arr), push(acc, func(first(arr))));
+        }
+    };
+    iter(arr, []);
+};
+
+let double = fn(x) {2*x};
+
+let computed = [1, 2, 3].map(double);
+computed;
+</pre>
+        <div id="output-container"><div id="output"></div></div>
+    </div>
+    <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/twilight");
+        editor.session.setMode("ace/mode/javascript");
+        editor.setOption("keyboardHandler", "ace/keyboard/vim");
+        editor.setOption("showPrintMargin", false);
+        editor.commands.addCommand({
+            name: 'sendCode',
+            bindKey: { win: 'Shift-Enter' },
+            exec: function (editor) {
+                console.log("SEND DA CODE")
+                let code = editor.getValue().replaceAll("\n", "");
+                let target = document.getElementById("output");
+                let res = runREPL(code);
+                target.innerHTML = target.innerHTML + res;
+                target.scrollIntoView(false);
+            },
+        });
+    </script>
+
+
+</body>
+
+</html>
