@@ -19,14 +19,14 @@
     <title>Monkey</title>
     <style type="text/css" media="screen">
         body {
-            overflow: auto;
-            background-color:#011526;
+            /* overflow: auto; */
+            background-color: #011526;
         }
 
         #container {
             display: flex;
             justify-content: flex-end;
-            overflow: auto;
+            /* overflow: auto; */
         }
 
         #editor {
@@ -43,19 +43,38 @@
             width: 50%;
             color: grey;
             font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace;
-            overflow: auto;
+            /* overflow: auto; */
 
         }
 
         #output {
             white-space: pre-wrap;
             padding-left: 10px;
+            position: relative;
+            /* overflow:auto; */
+        }
+
+        #output-field {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: auto;
+            min-height: 68vh;
+            padding-left: 10px;
+            display: flex;
+  flex-direction: column-reverse;
+        }
+        #kek {
+            min-height: 68vh;
         }
 
         #menu {
             padding-left: 10px;
         }
-        .menu-button{
+
+        .menu-button {
             background-color: transparent;
             font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace;
             color: grey;
@@ -63,8 +82,9 @@
             cursor: pointer;
             padding-left: 0px;
         }
+
         .menu-button:hover {
-            background: #002240 
+            background: #002240
         }
     </style>
 </head>
@@ -77,26 +97,40 @@ a;
 </pre>
         <div id="output-container">
             <table id="menu">
-                <tr><td><a href="https://monkeylang.org/" target="_blank"> >> The Monkey Language </a></td></tr>
-                <tr><td><a href="https://en.wikipedia.org/wiki/Uniform_Function_Call_Syntax" target="_blank"> >> This implementation supports UFCS</a></td></tr>
-                <tr><td><a href="https://github.com/ajaxorg/ace" target="_blank"> >> Ace (Ajax.org Cloud9 Editor)</a></td></tr>
+                <tr>
+                    <td><a href="https://monkeylang.org/" target="_blank"> >> The Monkey Language </a></td>
+                </tr>
+                <tr>
+                    <td><a href="https://en.wikipedia.org/wiki/Uniform_Function_Call_Syntax" target="_blank"> >> This
+                            implementation supports UFCS</a></td>
+                </tr>
+                <tr>
+                    <td><a href="https://github.com/ajaxorg/ace" target="_blank"> >> Ace (Ajax.org Cloud9 Editor)</a>
+                    </td>
+                </tr>
                 <tr>
                     <td>Test some snippets:</td>
                     <td>Keyboard Layout:</td>
                 </tr>
                 <tr>
                     <td><button class="menu-button" onclick="insertSnippet(mapSnippet)"><- map</button></td>
-                    <td><button class ="menu-button" onclick="switchLayout(vscodeLayout)">VSCode</button></td>
+                    <td><button class="menu-button" onclick="switchLayout(vscodeLayout)">VSCode</button></td>
                 </tr>
                 <tr>
                     <td><button class="menu-button" onclick="insertSnippet(filterSnippet)"><- filter</button></td>
-                    <td><button class ="menu-button" onclick="switchLayout(vimLayout)" >Vim</button></td>
+                    <td><button class="menu-button" onclick="switchLayout(vimLayout)">Vim</button></td>
                 </tr>
-                <tr><td><button class="menu-button" onclick="insertSnippet(reduceSnippet)"><- reduce</button></td></tr>
-                <tr><td>--------------------------------------</td></tr>
-                <tr><td>Press Shift+Enter to run</td></tr>
+                <tr>
+                    <td><button class="menu-button" onclick="insertSnippet(reduceSnippet)"><- reduce</button></td>
+                </tr>
+                <tr>
+                    <td>--------------------------------------</td>
+                </tr>
+                <tr>
+                    <td>Press Shift+Enter to run</td>
+                </tr>
             </table>
-            <div id="output"></div>
+            <div id="output"><div id="output-field"><div><div id="kek"></div></div></div></div>
         </div>
     </div>
     <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -113,7 +147,7 @@ a;
             exec: function (editor) {
                 console.log("SEND DA CODE")
                 let code = editor.getValue().replaceAll("\n", "");
-                let target = document.getElementById("output");
+                let target = document.getElementById("kek");
                 let res = runREPL(code);
                 target.innerHTML = target.innerHTML + formatOutput(res);
                 target.scrollIntoView(false);
@@ -123,15 +157,15 @@ a;
             let currCursor = editor.selection.getCursor();
             let currLine = currCursor.row;
             let currCol = currCursor.column;
-            editor.gotoLine(currLine+2);
+            editor.gotoLine(currLine + 2);
             editor.insert(snippet);
         }
-        var formatOutput = function(result) {
+        var formatOutput = function (result) {
             return ">> " + result;
         }
-        var vimLayout =  "ace/keyboard/vim";
-        var vscodeLayout =  "ace/keyboard/vscode";
-        var switchLayout = function(layout) {
+        var vimLayout = "ace/keyboard/vim";
+        var vscodeLayout = "ace/keyboard/vscode";
+        var switchLayout = function (layout) {
             editor.setOption("keyboardHandler", layout);
         }
         var mapSnippet = `let map = fn(arr, func) {
