@@ -103,7 +103,8 @@ a;
     <script>
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/cobalt");
-        editor.session.setMode("ace/mode/rust");
+        editor.session.setMode("ace/mode/javascript");
+        editor.session.setUseWorker(false)
         editor.setOption("keyboardHandler", "ace/keyboard/vscode");
         editor.setOption("showPrintMargin", false);
         editor.commands.addCommand({
