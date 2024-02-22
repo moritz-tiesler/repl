@@ -128,6 +128,7 @@ a;
                 </tr>
                 <tr>
                     <td>Press Shift+Enter to run</td>
+                    <td><button class="menu-button" onclick="clearOutput()">Clear</button></td>
                 </tr>
             </table>
             <div id="output"><div id="output-field"><div><div id="kek"></div></div></div></div>
@@ -162,6 +163,10 @@ a;
         }
         var formatOutput = function (result) {
             return ">> " + result;
+        }
+        var clearOutput = function() {
+            let target = document.getElementById("kek");
+            target.innerHTML = "";
         }
         var vimLayout = "ace/keyboard/vim";
         var vscodeLayout = "ace/keyboard/vscode";
