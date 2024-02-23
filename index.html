@@ -64,8 +64,9 @@
             min-height: 68vh;
             padding-left: 10px;
             display: flex;
-  flex-direction: column-reverse;
+            flex-direction: column-reverse;
         }
+
         #kek {
             min-height: 68vh;
             color: white
@@ -73,6 +74,9 @@
 
         #menu {
             padding-left: 10px;
+        }
+        #drop-target {
+            white-space: pre-wrap;
         }
 
         .menu-button {
@@ -123,6 +127,11 @@ a;
                 </tr>
                 <tr>
                     <td><button class="menu-button" onclick="insertSnippet(reduceSnippet)"><- reduce</button></td>
+                    <td>
+                        <select id="drop-target">
+                            <option value="a" selected="false"> sample</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td>--------------------------------------</td>
@@ -132,7 +141,13 @@ a;
                     <td><button class="menu-button" onclick="clearOutput()">Clear</button></td>
                 </tr>
             </table>
-            <div id="output"><div id="output-field"><div><div id="kek"></div></div></div></div>
+            <div id="output">
+                <div id="output-field">
+                    <div>
+                        <div id="kek"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -165,7 +180,7 @@ a;
         var formatOutput = function (result) {
             return ">> " + result;
         }
-        var clearOutput = function() {
+        var clearOutput = function () {
             let target = document.getElementById("kek");
             target.innerHTML = "";
         }
@@ -174,6 +189,39 @@ a;
         var switchLayout = function (layout) {
             editor.setOption("keyboardHandler", layout);
         }
+
+        var dropElement = document.getElementById("drop-target");
+        dropElement.addEventListener("dragenter", (event) => {
+            event.preventDefault();
+        });
+
+        dropElement.addEventListener("dragover", (event) => {
+            event.preventDefault();
+        });
+        
+        var onSelect = function() {
+            var selected = this.options[this.selectedIndex];
+            selected.selected = false;
+            insertSnippet(selected.value);
+        }.bind(dropElement)
+        
+        dropElement.addEventListener("change", onSelect);
+        
+        var onDrop = function(event) {
+            const data = event.dataTransfer.getData("Text");
+            var newOpt = document.createElement("option");
+            newOpt.innerHTML = data.slice(0, 12);
+            newOpt.setAttribute("value", data)
+            this.appendChild(newOpt);
+        }.bind(dropElement);
+        
+        
+
+        dropElement.addEventListener("drop", (event) => {
+            onDrop(event)
+        });
+
+
         var mapSnippet = `let map = fn(arr, func) {
     let iter = fn(arr, acc) {
         if (len(arr) == 0) {
@@ -191,12 +239,12 @@ mapped;
         var filterSnippet = `let filter = fn(arr, p) {
     let iter = fn(arr, acc) {
         if (len(arr) == 0) {
-                return acc;
+            return acc;
         } else {
             if (p(first(arr))) {
-                    iter(rest(arr), push(acc, first(arr)));
+                iter(rest(arr), push(acc, first(arr)));
             } else {
-                    iter(rest(arr), acc);
+                iter(rest(arr), acc);
             }
         }
     };
@@ -209,9 +257,9 @@ filtered;
         var reduceSnippet = `let reduce = fn(arr, initial, f) {
     let iter = fn(arr, result) {
         if (len(arr) == 0) {
-                result
+            result
         } else {
-                iter(rest(arr), f(result, first(arr)));
+            iter(rest(arr), f(result, first(arr)));
         }
     }
     iter(arr, initial);
