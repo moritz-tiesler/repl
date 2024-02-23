@@ -655,7 +655,7 @@ ace.define("ace/mode/javascript_highlight_rules", ["require", "exports", "module
             this.$rules["property"].unshift({
                 token: "support.function",
                 regex: "(findIndex|repeat|startsWith|endsWith|includes|isSafeInteger|trunc|cbrt|log2|log10|sign|then|catch|"
-                    + "finally|resolve|reject|race|any|all|allSettled|keys|entries|isInteger)\\b(?=\\()"
+                    + "finally|resolve|reject|race|any|all|allSettled|keys|entries|isInteger|len|first|last|rest|push)\\b(?=\\()"
             }, {
                 token: "constant.language",
                 regex: "(?:MAX_SAFE_INTEGER|MIN_SAFE_INTEGER|EPSILON)\\b"
