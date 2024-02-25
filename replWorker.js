@@ -1,7 +1,7 @@
 importScripts("wasm_exec.js")
 const go = new self.Go();
 
-WebAssembly.instantiateStreaming(fetch("repl.wasm"), go.importObject).then((result) => {
+let inst = WebAssembly.instantiateStreaming(fetch("repl.wasm"), go.importObject).then((result) => {
 
     go.run(result.instance);
 
@@ -9,6 +9,8 @@ WebAssembly.instantiateStreaming(fetch("repl.wasm"), go.importObject).then((resu
 
 
 onmessage = (e) => {
-    let res = runREPL(e.data);
-    postMessage(res);
+    inst.then((_) => {
+        let res = runREPL(e.data);
+        postMessage(res);
+    })
 }

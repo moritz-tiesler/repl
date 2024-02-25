@@ -174,7 +174,7 @@ a;
     <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
         var editor = ace.edit("editor");
-        const replWorker = new Worker("replWorker.js");
+        var getWorker = (function() {return new Worker("replWorker.js")})
         editor.setTheme("ace/theme/cobalt");
         editor.session.setMode("ace/mode/javascript");
         editor.session.setUseWorker(false)
@@ -216,10 +216,12 @@ a;
                 timeout
             ])
         }
-
-
-        document.getElementById("kek").addEventListener("call", (event) => {
-            let target = document.getElementById("kek");
+        
+        const target = document.getElementById("kek");
+        
+        const startWorker = function(event) {
+            target.removeEventListener("call", startWorker)
+            let replWorker = getWorker();
             let p = function() {
                 return new Promise((resolve, reject) => {
                 replWorker.postMessage(event.detail);
@@ -246,9 +248,13 @@ a;
                 target.appendChild(resultText)
                 target.scrollIntoView(false);                
                 
+            }).finally((_) => {
+                replWorker.terminate()
+                target.addEventListener("call", startWorker);
             })
-        })
+        }
 
+        target.addEventListener("call",startWorker) 
 
         var formatOutput = function (result) {
             return ">> " + result;
