@@ -185,9 +185,16 @@ a;
             bindKey: { win: 'Shift-Enter' },
             exec: function (editor) {
                 console.log("SEND DA CODE")
-                let code = editor.getValue().replaceAll("\n", "");
+                let selection = editor.getSelectedText();
+                let code;
+                if (selection !== "") {
+                    code = selection
+                } else {
+                    code = editor.getValue()
+                }
+                let sanatizedCode = code.replaceAll("\n", "");
                 let target = document.getElementById("kek");
-                target.dispatchEvent(new CustomEvent("call", { detail: code }))
+                target.dispatchEvent(new CustomEvent("call", { detail: sanatizedCode }))
             },
         });
 
