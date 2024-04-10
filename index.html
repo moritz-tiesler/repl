@@ -136,8 +136,10 @@ a;
                     <td><a href="https://monkeylang.org/" target="_blank"> >> The Monkey Language </a></td>
                 </tr>
                 <tr>
-                    <td><a href="https://en.wikipedia.org/wiki/Uniform_Function_Call_Syntax" target="_blank"> >> This
-                            implementation supports UFCS</a></td>
+                    <td><a href="https://en.wikipedia.org/wiki/Uniform_Function_Call_Syntax" target="_blank"> >> This implementation supports UFCS</a></td>
+                </tr>
+                <tr></tr>
+                    <td><a href="https://kotlinlang.org/docs/lambdas.html#lambda-expression-syntax" target="_blank"> >> Lambda Syntax inspired by Kotlin</a></td>
                 </tr>
                 <tr>
                     <td><a href="https://github.com/ajaxorg/ace" target="_blank"> >> Ace (Ajax.org Cloud9 Editor)</a>
@@ -321,7 +323,7 @@ a;
     iter(arr, []);
 };
 
-let mapped = [1, 2, 3].map(fn(x) {2*x})
+let mapped = [1, 2, 3].map {x -> 2*x};
 mapped;
 `;
         var filterSnippet = `let filter = fn(arr, p) {
@@ -339,7 +341,7 @@ mapped;
     iter(arr, []);
 }; 
 
-let filtered = [1, 2, 3].filter(fn(x) {x<3});
+let filtered = [1, 2, 3].filter {x -> x < 3};
 filtered;
 `;
         var reduceSnippet = `let reduce = fn(arr, initial, f) {
@@ -353,7 +355,7 @@ filtered;
     iter(arr, initial);
 };
 
-let reduced = [1, 2, 3].reduce(0, fn(a,b) {a+b});
+let reduced = [1, 2, 3].reduce(100) {a, b -> a + b};
 reduced;
 `;
 
